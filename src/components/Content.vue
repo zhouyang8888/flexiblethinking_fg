@@ -1,13 +1,14 @@
 <template>
     <div class='content'>
-      <ol class='titles'>
+      <ol class='titles' :start="start">
           <li v-for="item in items" :key="item.id">
             <a :href="'/list/' + item.id">{{ item.title }}</a>
           </li>
       </ol>
       <ul class="pageno">
           <li v-for="p in ps" :key="p.no">
-            <button v-on:click="jump(p.no)">{{ p.no }}</button>
+            <button v-if="p.no >= 1" v-on:click="jump(p.no)">{{ p.no }}</button>
+            <button v-else style="background-color:red">无</button>
           </li>
       </ul>
     </div>
@@ -17,13 +18,16 @@
 export default {
   name: 'Content',
   props: {
+    start: { type: Number, default: 1 },
     items: Array,
     ps: Array
   },
   methods: {
-    jump: function (pageNo) {
+    jump: function (pn) {
+      var pageNo = Number(pn)
       this.items = [{ title: pageNo + '_题1', id: pageNo * 10 + 1 }, { title: pageNo + '_题2', id: pageNo * 10 + 2 }, { title: pageNo + '_题3', id: pageNo * 10 + 3 }]
       this.ps = [{ no: pageNo - 1 }, { no: pageNo }, { no: pageNo + 1 }]
+      this.start = pageNo * 10 - 9
     }
   }
 }
@@ -47,13 +51,14 @@ export default {
     height: 70%;
     border-bottom: solid 1px;
 }
-a {
-    text-decoration: none;
+button {
+    color:darkgreen;
 }
-a:hover {
-    background-color: chartreuse;
+button:hover {
+    background-color:teal;
+    color: white;
 }
-a:visited {
+button:visited {
     text-decoration-color:crimson;
     background-color: lightgrey;
 }
@@ -62,7 +67,6 @@ a:visited {
     display: inline;
     width: 50px;
     margin: 2px;
-    background-color:lightgreen;
     border-radius: 2px;
     border-style:none;
 }

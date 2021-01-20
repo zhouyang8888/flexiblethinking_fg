@@ -2,7 +2,7 @@
   <div class="fp">
     <div id='logo'><p>FlexibleThinking</p></div>
     <Login name="name" pswd="password"/>
-    <Content :items="[{title: '题1', id:'1'}, {title: '题2', id:'2'}, {title: '题3', id:'3'}]" :ps="[{no:'1'},{no:'2'},{no:'3'}]" />
+    <Content :start="1" :items="[{title: '题1', id:'1'}, {title: '题2', id:'2'}, {title: '题3', id:'3'}]" :ps="[{no:'1'},{no:'2'},{no:'3'}]" />
   </div>
 </template>
 
