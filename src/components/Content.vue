@@ -25,9 +25,10 @@ export default {
   methods: {
     jump: function (pn) {
       var pageNo = Number(pn)
-      this.items = [{ title: pageNo + '_题1', id: pageNo * 10 + 1 }, { title: pageNo + '_题2', id: pageNo * 10 + 2 }, { title: pageNo + '_题3', id: pageNo * 10 + 3 }]
+      var start = pageNo * 10 - 10
+      this.start = start + 1
+      this.items = [{ title: pageNo + '_题1', id: start + 1 }, { title: pageNo + '_题2', id: start + 2 }, { title: pageNo + '_题3', id: start + 3 }]
       this.ps = [{ no: pageNo - 1 }, { no: pageNo }, { no: pageNo + 1 }]
-      this.start = pageNo * 10 - 9
     }
   }
 }
