@@ -2,7 +2,8 @@
   <div class="fp">
     <div id='logo'><p>FlexibleThinking</p></div>
     <Login name="name" pswd="password"/>
-    <Content :start="1" :items="[{title: '题1', id:'1'}, {title: '题2', id:'2'}, {title: '题3', id:'3'}]" :ps="[{no:'1'},{no:'2'},{no:'3'}]" />
+    <Content v-if="toShowlist" :pageNo="pageNo" v-on:showProblem="updateProblemId" />
+    <Problem v-else :id="problemId" v-on:showList="updatePageNo"/>
   </div>
 </template>
 
@@ -10,12 +11,29 @@
 // @ is an alias to /src
 import Login from '@/components/Login.vue'
 import Content from '@/components/Content.vue'
+import Problem from '@/components/Problem.vue'
 
 export default {
   name: 'Frontpage',
   components: {
     Login,
-    Content
+    Content,
+    Problem
+  },
+  props: {
+    pageNo: { type: Number, default: 1 },
+    problemId: { type: Number, default: 1 },
+    toShowlist: { type: Boolean, default: true }
+  },
+  methods: {
+    updateProblemId: function (pid) {
+      this.problemId = pid
+      this.toShowlist = false
+    },
+    updatePageNo: function (pno) {
+      this.pageNo = pno
+      this.toShowlist = true
+    }
   }
 }
 </script>

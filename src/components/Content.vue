@@ -2,12 +2,13 @@
     <div class='content'>
       <ol class='titles' :start="start">
           <li v-for="item in items" :key="item.id">
-            <a :href="'/list/' + item.id">{{ item.title }}</a>
+            <a v-on:click="$emit('showProblem', item.id)">{{ item.title }}</a>
           </li>
       </ol>
       <ul class="pageno">
-          <li v-for="p in ps" :key="p.no">
-            <button v-if="p.no >= 1" v-on:click="jump(p.no)">{{ p.no }}</button>
+          <li v-for="p in pages" :key="p.no">
+            <button v-if="p.no >= 1 && p.no != pageNo" v-on:click="jump(p.no)">{{ p.no }}</button>
+            <button v-else-if="p.no >= 1 && p.no == pageNo" v-on:click="jump(p.no)" class="curPage">{{ p.no }}</button>
             <button v-else style="background-color:red">无</button>
           </li>
       </ul>
@@ -18,17 +19,37 @@
 export default {
   name: 'Content',
   props: {
-    start: { type: Number, default: 1 },
-    items: Array,
-    ps: Array
+    pageNo: { type: Number, default: 1 }
+  },
+  computed: {
+    start: function () { return this.pageNo * 10 - 9 },
+    items: function () {
+      var arr = []
+      var i = 0
+      while (i < 10) {
+        var sn = this.pageNo * 10 - 9 + i
+        arr[i] = { title: sn + '_题', id: sn }
+        i += 1
+      }
+      return arr
+    },
+    pages: function () {
+      var arr = []
+      var minP = this.pageNo > 4 ? this.pageNo - 4 : 1
+      var maxP = minP + 9
+      var j = 0
+      var i = minP
+      while (i <= maxP) {
+        arr[j] = { no: i }
+        j += 1
+        i++
+      }
+      return arr
+    }
   },
   methods: {
     jump: function (pn) {
-      var pageNo = Number(pn)
-      var start = pageNo * 10 - 10
-      this.start = start + 1
-      this.items = [{ title: pageNo + '_题1', id: start + 1 }, { title: pageNo + '_题2', id: start + 2 }, { title: pageNo + '_题3', id: start + 3 }]
-      this.ps = [{ no: pageNo - 1 }, { no: pageNo }, { no: pageNo + 1 }]
+      this.pageNo = Number(pn)
     }
   }
 }
@@ -56,19 +77,38 @@ button {
     color:darkgreen;
 }
 button:hover {
-    background-color:teal;
-    color: white;
+    background-color:yellowgreen;
+    color: red;
+    font-size: large;
 }
 button:visited {
     text-decoration-color:crimson;
     background-color: lightgrey;
 }
-
-.pageno * {
+.pageno li {
     display: inline;
     width: 50px;
     margin: 2px;
     border-radius: 2px;
-    border-style:none;
+    border: none;
+}
+li button {
+    display: inline;
+    width: 50px;
+    margin: 2px;
+    border-radius: 2px;
+    border:none;
+}
+a:hover {
+    background-color: teal;
+    text-decoration-color: white;
+}
+a:visited {
+    text-decoration-color:crimson;
+    background-color: lightgrey;
+}
+.curPage {
+    color:whitesmoke;
+    background-color:darkcyan;
 }
 </style>
