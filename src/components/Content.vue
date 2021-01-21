@@ -28,7 +28,7 @@ export default {
       var i = 0
       while (i < 10) {
         var sn = this.pageNo * 10 - 9 + i
-        arr[i] = { title: sn + '_题', id: sn }
+        arr[i] = { title: '题' + sn, id: sn }
         i += 1
       }
       return arr

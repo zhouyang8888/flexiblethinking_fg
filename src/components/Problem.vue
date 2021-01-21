@@ -16,10 +16,10 @@ export default {
     id: { type: Number, required: true, default: 1 }
   },
   computed: {
-    title: function () { return 'Problem' },
-    desc: function () { return 'desc' },
-    in: function () { return 'in' },
-    out: function () { return 'out' }
+    title: function () { return '题目' },
+    desc: function () { return '内容描述' },
+    in: function () { return '样例输入' },
+    out: function () { return '期望输出' }
   }
 }
 </script>
@@ -34,11 +34,19 @@ export default {
     width: 60%;
     height: 70%;
     border-top: solid 1px;
+    align-content: left;
  }
  h5 {
+   text-align: left;
    margin-left: 10px;
  }
  p {
-   display: inline;
+   text-align: left;
+   text-indent: 50px;
+ }
+ p::first-letter {
+   font-size: larger;
+   color: red;
+   font-weight: bolder;
  }
 </style>
