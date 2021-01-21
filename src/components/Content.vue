@@ -79,7 +79,7 @@ button {
 button:hover {
     background-color:yellowgreen;
     color: red;
-    font-size: large;
+    font-weight: bolder;
 }
 button:visited {
     text-decoration-color:crimson;
