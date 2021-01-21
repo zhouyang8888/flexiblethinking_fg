@@ -100,8 +100,8 @@ li button {
     border:none;
 }
 a:hover {
-    background-color: teal;
-    text-decoration-color: white;
+    background-color:yellowgreen;
+    color:red;
 }
 a:visited {
     text-decoration-color:crimson;
