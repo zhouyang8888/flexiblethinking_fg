@@ -1,7 +1,7 @@
 <template>
   <div class="fp">
     <div id='logo'><p>FlexibleThinking</p></div>
-    <Login name="name" pswd="password"/>
+    <Login/>
     <Content v-if="toShowlist" :pageNo="pageNo" v-on:showProblem="updateProblemId" />
     <Problem v-else :id="problemId" v-on:showList="updatePageNo"/>
   </div>
