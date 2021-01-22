@@ -31,9 +31,6 @@ export default {
     in: function () { return '样例输入' },
     out: function () { return '期望输出' }
   },
-  mounted: {
-
-  },
   methods: {
     submit: function () {
       axios.get('/submit?id=' + this.id + '&answer=' + this.answer)
