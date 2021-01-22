@@ -6,8 +6,8 @@
     <div class='container'>
       <input name="answerin" type="text" v-model="answer" placeholder="Fill in your answer here." v-on:mouseover="refill" />
       <button v-if="!show" type="submit" v-on:click="submit">提交</button>
-      <img v-else-if="correct" class='container' src="../assets/right.png"/>
-      <img v-else class='container' src="../assets/wrong.jpg"/>
+      <img v-else-if="correct" src="../assets/right.png"/>
+      <img v-else src="../assets/wrong.jpg"/>
     </div>
   </div>
   <button id='return' v-on:click="$emit('showList', Math.floor((id - 1) / 10 + 1))">返回</button>
