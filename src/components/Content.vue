@@ -16,27 +16,35 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'Content',
   props: {
-    pageNo: { type: Number, default: 1 }
+    pageNo: { type: Number, default: 1 },
+    problems: Array,
+    pageCount: Number,
+    pageStep: { type: Number, default: 10 },
+    pageMaxProblemCount: { type: Number, default: 10 }
   },
   computed: {
-    start: function () { return this.pageNo * 10 - 9 },
+    start: function () { return (this.pageNo - 1) * this.pageMaxProblemCount + 1 },
     items: function () {
       var arr = []
       var i = 0
-      while (i < 10) {
-        var sn = this.pageNo * 10 - 9 + i
-        arr[i] = { title: '题' + sn, id: sn }
-        i += 1
+      var sn = this.start
+      while (i < this.problems.length) {
+        arr[i] = { title: this.problems[i], id: sn }
+        i++
+        sn++
       }
       return arr
     },
     pages: function () {
       var arr = []
-      var minP = this.pageNo > 4 ? this.pageNo - 4 : 1
-      var maxP = minP + 9
+      var halfPageStep = Math.floor(this.pageStep / 2)
+      var minP = this.pageNo > halfPageStep ? this.pageNo - halfPageStep : 1
+      var maxP = minP + this.pageStep < this.pageCount ? minP + this.pageStep : this.pageCount
       var j = 0
       var i = minP
       while (i <= maxP) {
@@ -48,9 +56,23 @@ export default {
     }
   },
   methods: {
+    useData: function (response) {
+      /** TODO: set data **/
+    },
+    /* getData to pull data by parameter pageNo and pageMaxProblemCount */
+    getData: async function () {
+      await axios.get('/list?pn=' + this.pageNo + '&mpc=' + this.pageMaxProblemCount)
+        .then(response => this.useData(response))
+        .catch(err => { alert(err + '  /list?pn=' + this.pageNo + '&mpc=' + this.pageMaxProblemCount) })
+    },
     jump: function (pn) {
       this.pageNo = Number(pn)
+      this.getData()
     }
+  },
+  /* Fetch problem content when mounted */
+  mounted: function () {
+    this.getData()
   }
 }
 </script>

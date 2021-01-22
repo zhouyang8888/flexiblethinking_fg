@@ -23,13 +23,14 @@ export default {
     id: { type: Number, default: 1 },
     correct: Boolean,
     show: { type: Boolean, default: false },
-    answer: String
+    answer: String,
+    problem: Object
   },
   computed: {
-    title: function () { return '题目' },
-    desc: function () { return '内容描述' },
-    in: function () { return '样例输入' },
-    out: function () { return '期望输出' }
+    title: function () { return this.problem.title },
+    desc: function () { return this.problem.desc },
+    in: function () { return this.problem.in },
+    out: function () { return this.problem.out }
   },
   methods: {
     submit: function () {
@@ -49,6 +50,12 @@ export default {
         document.getElementsByName('answerin')[0].select()
       }
     }
+  },
+  /* Fetch problem content when mounted */
+  mounted: async function () {
+    await axios.get('/problem?id=' + this.id)
+      .then(response => console.log(response))
+      .catch(err => { alert(err) })
   }
 }
 </script>
