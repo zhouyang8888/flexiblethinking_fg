@@ -8,6 +8,7 @@
 
 <script>
 import axios from 'axios'
+import md5 from 'md5'
 
 export default {
   name: 'Login',
@@ -17,18 +18,22 @@ export default {
   },
   methods: {
     register: function () {
-      axios.get("'/signup?name='name'&pswd='pswd")
+      var postBody = { name: this.name, md5pswd: md5(this.pswd) }
+      axios.post('http://127.0.0.1:80/signup', postBody)
         .then(response => {
-        // aaaaa
+          alert(response.data)
+          console.log(response.data)
         })
         .catch(Error => {
           alert('signup ' + Error + ' : ' + this.name + ' ' + this.pswd)
         })
     },
     login: function () {
-      axios.get("'/login?name='name'&pswd='pswd")
+      var postBody = { name: this.name, md5pswd: md5(this.pswd) }
+      axios.post('http://127.0.0.1:80/signin', postBody)
         .then(response => {
-        // aaaaa
+          alert(JSON.stringify(response.data))
+          console.log(response.data)
         })
         .catch(Error => {
           alert('login ' + Error + ' : ' + this.name + ' ' + this.pswd)
