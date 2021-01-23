@@ -20,6 +20,7 @@ import axios from 'axios'
 export default {
   name: 'Problem',
   props: {
+    uid: Number,
     id: { type: Number, default: 1 },
     correct: Boolean,
     show: { type: Boolean, default: false },
@@ -27,20 +28,28 @@ export default {
     problem: Object
   },
   computed: {
-    title: function () { return this.problem.title },
-    desc: function () { return this.problem.desc },
-    in: function () { return this.problem.in },
-    out: function () { return this.problem.out }
+    title: function () { return this.problem ? this.problem.title : '' },
+    desc: function () { return this.problem ? this.problem.desc : '' },
+    in: function () { return this.problem ? this.problem.in : '' },
+    out: function () { return this.problem ? this.problem.out : '' }
   },
   methods: {
     submit: function () {
-      axios.get('/submit?id=' + this.id + '&answer=' + this.answer)
+      if (!this.uid || this.uid < 0) {
+        alert('请先登录！！！')
+        return
+      }
+      if (!this.answer) {
+        alert('请填写答案！！！')
+        return
+      }
+      var postBody = { uid: this.uid, id: this.id, ans: this.answer }
+      axios.post('http://127.0.0.1:80/submit', postBody)
         .then(response => {
-          alert('Submit:' + '/submit?id=' + this.id + '&answer=' + this.answer)
+          this.correct = response.data.correct
+          this.show = true
         })
         .catch(Error => {
-          this.correct = false
-          this.show = true
           alert('Submit Error:' + '/submit?id=' + this.id + '&answer=' + this.answer)
         })
     },
@@ -53,8 +62,11 @@ export default {
   },
   /* Fetch problem content when mounted */
   mounted: async function () {
-    await axios.get('/problem?id=' + this.id)
-      .then(response => console.log(response))
+    var postBody = { id: this.id }
+    await axios.post('http://127.0.0.1:80/problem', postBody)
+      .then(response => {
+        this.problem = response.data
+      })
       .catch(err => { alert(err) })
   }
 }

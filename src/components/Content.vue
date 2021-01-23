@@ -33,10 +33,12 @@ export default {
       var arr = []
       var i = 0
       var sn = this.start
-      while (i < this.problems.length) {
-        arr[i] = { title: this.problems[i], id: sn }
-        i++
-        sn++
+      if (this.problems) {
+        while (i < this.problems.length) {
+          arr[i] = { title: this.problems[i].title, id: sn }
+          i++
+          sn++
+        }
       }
       return arr
     },
@@ -57,13 +59,14 @@ export default {
   },
   methods: {
     useData: function (response) {
-      /** TODO: set data **/
+      this.pageCount = response.data.pageCount
+      this.problems = response.data.problems
     },
     /* getData to pull data by parameter pageNo and pageMaxProblemCount */
     getData: async function () {
-      await axios.get('/list?pn=' + this.pageNo + '&mpc=' + this.pageMaxProblemCount)
+      await axios.get('http://127.0.0.1:80/list?pn=' + this.pageNo + '&mpc=' + this.pageMaxProblemCount)
         .then(response => this.useData(response))
-        .catch(err => { alert(err + '  /list?pn=' + this.pageNo + '&mpc=' + this.pageMaxProblemCount) })
+        .catch(err => { alert('#### ' + err + '  /list?pn=' + this.pageNo + '&mpc=' + this.pageMaxProblemCount) })
     },
     jump: function (pn) {
       this.pageNo = Number(pn)

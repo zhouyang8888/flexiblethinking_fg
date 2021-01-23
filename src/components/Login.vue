@@ -21,8 +21,11 @@ export default {
       var postBody = { name: this.name, md5pswd: md5(this.pswd) }
       axios.post('http://127.0.0.1:80/signup', postBody)
         .then(response => {
-          alert(response.data)
-          console.log(response.data)
+          if (response.data.statusCode >= 0) {
+            this.$emit('loginSuc', response.data.uid)
+          } else {
+            alert(response.data.message)
+          }
         })
         .catch(Error => {
           alert('signup ' + Error + ' : ' + this.name + ' ' + this.pswd)
@@ -32,8 +35,11 @@ export default {
       var postBody = { name: this.name, md5pswd: md5(this.pswd) }
       axios.post('http://127.0.0.1:80/signin', postBody)
         .then(response => {
-          alert(JSON.stringify(response.data))
-          console.log(response.data)
+          if (response.data.statusCode >= 0) {
+            this.$emit('loginSuc', response.data.uid)
+          } else {
+            alert(response.data.message)
+          }
         })
         .catch(Error => {
           alert('login ' + Error + ' : ' + this.name + ' ' + this.pswd)
