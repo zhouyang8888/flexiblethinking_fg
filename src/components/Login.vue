@@ -45,6 +45,24 @@ export default {
           alert('login ' + Error + ' : ' + this.name + ' ' + this.pswd)
         })
     }
+  },
+  mounted: function () {
+    let cookies = document.cookie.split(';')
+    for (let c in cookies) {
+      c = c.trim();
+      if (c.startsWith('qwer=')) {
+        let v = c.substr('qwer='.length(), c.length())
+        const postBody = { 'check': v }
+        axios.post('http://127.0.0.1:80/api/signincheck', postBody)
+          .then(response => {
+            if (response.data.statusCode >= 0) {
+              this.name = response.data.message
+              this.$emit('loginSuc', response.data.uid)
+            }
+          })
+        break
+      }
+    }
   }
 }
 </script>
