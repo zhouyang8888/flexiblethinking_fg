@@ -44,7 +44,7 @@ export default {
         return
       }
       const postBody = { uid: this.uid, id: this.id, ans: this.answer }
-      axios.post('http://127.0.0.1:80/submit', postBody)
+      axios.post('http://127.0.0.1:80/api/submit', postBody)
         .then(response => {
           this.correct = response.data.correct
           this.show = true
@@ -63,7 +63,7 @@ export default {
   /* Fetch problem content when mounted */
   mounted: async function () {
     const postBody = { id: this.id }
-    await axios.post('http://127.0.0.1:80/problem', postBody)
+    await axios.post('http://127.0.0.1:80/api/problem', postBody)
       .then(response => {
         this.problem = response.data
       })

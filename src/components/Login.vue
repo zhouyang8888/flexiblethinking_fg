@@ -19,7 +19,7 @@ export default {
   methods: {
     register: function () {
       const postBody = { name: this.name, md5pswd: md5(this.pswd) }
-      axios.post('http://127.0.0.1:80/signup', postBody)
+      axios.post('http://127.0.0.1:80/api/signup', postBody)
         .then(response => {
           if (response.data.statusCode >= 0) {
             this.$emit('loginSuc', response.data.uid)
@@ -33,7 +33,7 @@ export default {
     },
     login: function () {
       const postBody = { name: this.name, md5pswd: md5(this.pswd) }
-      axios.post('http://127.0.0.1:80/signin', postBody)
+      axios.post('http://127.0.0.1:80/api/signin', postBody)
         .then(response => {
           if (response.data.statusCode >= 0) {
             this.$emit('loginSuc', response.data.uid)

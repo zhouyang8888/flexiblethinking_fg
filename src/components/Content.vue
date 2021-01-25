@@ -64,7 +64,7 @@ export default {
     },
     /* getData to pull data by parameter pageNo and pageMaxProblemCount */
     getData: async function () {
-      await axios.get('http://127.0.0.1:80/list?pn=' + this.pageNo + '&mpc=' + this.pageMaxProblemCount)
+      await axios.get('http://127.0.0.1:80/api/list?pn=' + this.pageNo + '&mpc=' + this.pageMaxProblemCount)
         .then(response => this.useData(response))
         .catch(err => { alert('#### ' + err + '  /list?pn=' + this.pageNo + '&mpc=' + this.pageMaxProblemCount) })
     },
