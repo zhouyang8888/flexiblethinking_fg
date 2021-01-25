@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     register: function () {
-      var postBody = { name: this.name, md5pswd: md5(this.pswd) }
+      const postBody = { name: this.name, md5pswd: md5(this.pswd) }
       axios.post('http://127.0.0.1:80/signup', postBody)
         .then(response => {
           if (response.data.statusCode >= 0) {
@@ -32,7 +32,7 @@ export default {
         })
     },
     login: function () {
-      var postBody = { name: this.name, md5pswd: md5(this.pswd) }
+      const postBody = { name: this.name, md5pswd: md5(this.pswd) }
       axios.post('http://127.0.0.1:80/signin', postBody)
         .then(response => {
           if (response.data.statusCode >= 0) {

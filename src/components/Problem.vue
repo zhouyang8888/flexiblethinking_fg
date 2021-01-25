@@ -43,7 +43,7 @@ export default {
         alert('请填写答案！！！')
         return
       }
-      var postBody = { uid: this.uid, id: this.id, ans: this.answer }
+      const postBody = { uid: this.uid, id: this.id, ans: this.answer }
       axios.post('http://127.0.0.1:80/submit', postBody)
         .then(response => {
           this.correct = response.data.correct
@@ -62,7 +62,7 @@ export default {
   },
   /* Fetch problem content when mounted */
   mounted: async function () {
-    var postBody = { id: this.id }
+    const postBody = { id: this.id }
     await axios.post('http://127.0.0.1:80/problem', postBody)
       .then(response => {
         this.problem = response.data
