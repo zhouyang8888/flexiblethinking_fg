@@ -60,6 +60,9 @@ export default {
               this.$emit('loginSuc', response.data.uid)
             }
           })
+          .catch(Error => {
+            alert('Auto login' + Error + ' : ' + v)
+          })
         break
       }
     }
