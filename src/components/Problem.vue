@@ -35,6 +35,7 @@ export default {
   },
   methods: {
     submit: function () {
+      // alert('UID:' + this.uid)
       if (!this.uid || this.uid < 0) {
         alert('请先登录！！！')
         return

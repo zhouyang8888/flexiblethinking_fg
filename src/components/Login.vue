@@ -9,6 +9,7 @@
 <script>
 import axios from 'axios'
 import md5 from 'md5'
+import vueCookies from 'vue-cookies'
 
 export default {
   name: 'Login',
@@ -21,10 +22,9 @@ export default {
       const postBody = { name: this.name, md5pswd: md5(this.pswd) }
       axios.post('http://127.0.0.1:80/api/signup', postBody)
         .then(response => {
+          alert(response.data.message)
           if (response.data.statusCode >= 0) {
-            this.$emit('loginSuc', response.data.uid)
-          } else {
-            alert(response.data.message)
+            this.login()
           }
         })
         .catch(Error => {
@@ -35,8 +35,10 @@ export default {
       const postBody = { name: this.name, md5pswd: md5(this.pswd) }
       axios.post('http://127.0.0.1:80/api/signin', postBody)
         .then(response => {
-          if (response.data.statusCode >= 0) {
-            this.$emit('loginSuc', response.data.uid)
+          if (response.data.info && response.data.info.statusCode >= 0) {
+            vueCookies.set('qwer', response.data.qwer, '1d')
+            this.$emit('loginSuc', response.data.info.uid)
+            alert(response.data.info.message)
           } else {
             alert(response.data.message)
           }
@@ -49,10 +51,10 @@ export default {
   mounted: function () {
     const cookies = document.cookie.split(';')
     for (let c in cookies) {
-      c = c.trim()
+      c = cookies[c].trim()
       if (c.startsWith('qwer=')) {
-        const v = c.substr('qwer='.length(), c.length())
-        const postBody = { check: v }
+        c = c.substr('qwer='.length)
+        const postBody = { check: c }
         axios.post('http://127.0.0.1:80/api/signincheck', postBody)
           .then(response => {
             if (response.data.statusCode >= 0) {
@@ -61,7 +63,7 @@ export default {
             }
           })
           .catch(Error => {
-            alert('Auto login' + Error + ' : ' + v)
+            alert('Auto login' + Error + ' : ' + c)
           })
         break
       }
