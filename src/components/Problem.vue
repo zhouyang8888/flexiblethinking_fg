@@ -1,7 +1,7 @@
 <template>
   <div>
   <div class='problem'>
-    <h5>title</h5><p>{{ id }}_{{ title }}</p>
+    <h5>title</h5><p>{{ pid }}_{{ title }}</p>
     <h5>desc</h5><p>{{ desc }}</p>
     <div class='container'>
       <input name="answerin" type="text" v-model="answer" placeholder="Fill in your answer here." v-on:mouseover="refill" />
@@ -10,7 +10,7 @@
       <img v-else src="../assets/wrong.jpg"/>
     </div>
   </div>
-  <button id='return' v-on:click="$emit('showList', Math.floor((id - 1) / 10 + 1))">返回</button>
+  <button id='return' v-on:click="$emit('showList', Math.floor((pid - 1) / 10 + 1))">返回</button>
   </div>
 </template>
 
@@ -21,11 +21,15 @@ export default {
   name: 'Problem',
   props: {
     uid: Number,
-    id: { type: Number, default: 1 },
-    correct: Boolean,
-    show: { type: Boolean, default: false },
-    answer: String,
-    problem: Object
+    pid: { type: Number, default: 1 }
+  },
+  data: function () {
+    return {
+      problem: '',
+      answer: '',
+      show: false,
+      correct: false
+    }
   },
   computed: {
     title: function () { return this.problem ? this.problem.title : '' },
@@ -44,14 +48,14 @@ export default {
         alert('请填写答案！！！')
         return
       }
-      const postBody = { uid: this.uid, id: this.id, ans: this.answer }
+      const postBody = { uid: this.uid, id: this.pid, ans: this.answer }
       axios.post('http://127.0.0.1:80/api/submit', postBody)
         .then(response => {
           this.correct = response.data.correct
           this.show = true
         })
         .catch(Error => {
-          alert('Submit Error:' + '/submit?id=' + this.id + '&answer=' + this.answer)
+          alert('Submit Error:' + '/submit?id=' + this.pid + '&answer=' + this.answer)
         })
     },
     refill: function () {
@@ -63,7 +67,7 @@ export default {
   },
   /* Fetch problem content when mounted */
   mounted: async function () {
-    const postBody = { id: this.id }
+    const postBody = { id: this.pid }
     await axios.post('http://127.0.0.1:80/api/problem', postBody)
       .then(response => {
         this.problem = response.data

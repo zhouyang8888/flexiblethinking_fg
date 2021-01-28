@@ -3,7 +3,7 @@
     <div id='logo'><p>FlexibleThinking</p></div>
     <Login v-on:loginSuc="updateUID"/>
     <Content v-if="toShowlist" :pageNo="pageNo" v-on:showProblem="updateProblemId" />
-    <Problem v-else :uid="uid" :id="problemId" v-on:showList="updatePageNo"/>
+    <Problem v-else :uid="uid" :pid="problemId" v-on:showList="updatePageNo"/>
   </div>
 </template>
 
@@ -20,11 +20,13 @@ export default {
     Content,
     Problem
   },
-  props: {
-    pageNo: { type: Number, default: 1 },
-    problemId: { type: Number, default: 1 },
-    toShowlist: { type: Boolean, default: true },
-    uid: { type: Number }
+  data: function () {
+    return {
+      pageNo: 1,
+      problemId: 1,
+      toShowlist: true,
+      uid: null
+    }
   },
   methods: {
     updateProblemId: function (pid) {

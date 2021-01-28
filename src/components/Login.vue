@@ -13,9 +13,11 @@ import vueCookies from 'vue-cookies'
 
 export default {
   name: 'Login',
-  props: {
-    name: { type: String, default: 'name' },
-    pswd: { type: String, default: 'password' }
+  data: function () {
+    return {
+      name: 'name',
+      pswd: 'password'
+    }
   },
   methods: {
     register: function () {
@@ -38,7 +40,6 @@ export default {
           if (response.data.info && response.data.info.statusCode >= 0) {
             vueCookies.set('qwer', response.data.qwer, '1d')
             this.$emit('loginSuc', response.data.info.uid)
-            alert(response.data.info.message)
           } else {
             alert(response.data.message)
           }

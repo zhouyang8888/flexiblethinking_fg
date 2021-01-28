@@ -21,11 +21,15 @@ import axios from 'axios'
 export default {
   name: 'Content',
   props: {
-    pageNo: { type: Number, default: 1 },
-    problems: Array,
-    pageCount: Number,
-    pageStep: { type: Number, default: 10 },
-    pageMaxProblemCount: { type: Number, default: 10 }
+    pageNo: { type: Number, default: 1 }
+  },
+  data: function () {
+    return {
+      problems: [],
+      pageCount: 0,
+      pageStep: 10,
+      pageMaxProblemCount: 10
+    }
   },
   computed: {
     start: function () { return (this.pageNo - 1) * this.pageMaxProblemCount + 1 },
