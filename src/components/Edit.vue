@@ -33,7 +33,7 @@ export default {
       const xxx = ['title', 'desc', 'in', 'out']
       const tag = ['input', 'textarea', 'input', 'input']
       const textstyle = 'width: 100%; border-radius: 5px; border-width: 1px;'
-      const specificstyle = ['', 'height: 100px', '', '']
+      const specificstyle = ['', 'height: 100px; font-family: Arial;', '', '']
 
       for (let i = 0; i < xxx.length; i++) {
         const p = document.createElement('p')
@@ -54,16 +54,18 @@ export default {
       const ol = document.getElementsByClassName('eproblems')[0]
       for (let i = 0; i < ol.childElementCount; i++) {
         const curLiNode = ol.childNodes[i]
-        const title = curLiNode.childNodes[0].childNodes[1].value
-        const desc = curLiNode.childNodes[1].childNodes[1].value
-        const input = curLiNode.childNodes[2].childNodes[1].value
-        const output = curLiNode.childNodes[3].childNodes[1].value
+        const title = curLiNode.childNodes[0].childNodes[1].value.trim()
+        const desc = curLiNode.childNodes[1].childNodes[1].value.trim()
+        const input = curLiNode.childNodes[2].childNodes[1].value.trim()
+        const output = curLiNode.childNodes[3].childNodes[1].value.trim()
         postBody[i] = { title: title, desc: desc, in: input, out: output }
       }
       alert(JSON.stringify(postBody))
       await axios.post('http://127.0.0.1:80/api/addproblem', postBody)
         .then(response => {
-          alert(response.data)
+          alert(response.data.message)
+          alert(response)
+          alert(JSON.stringify(response))
         })
         .catch(err => { alert(err) })
     }
@@ -94,7 +96,8 @@ export default {
   border-width: 1px;
 }
 textarea.text {
-  height: 100px
+  height: 100px;
+  font-family: Arial;
 }
 button:hover {
   background-color:yellowgreen;
