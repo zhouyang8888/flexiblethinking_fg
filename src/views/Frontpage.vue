@@ -1,9 +1,14 @@
 <template>
   <div class="fp">
     <div id='logo'><p>FlexibleThinking</p></div>
-    <Login v-on:loginSuc="updateUID"/>
-    <Content v-if="toShowlist" :pageNo="pageNo" v-on:showProblem="updateProblemId" />
-    <Problem v-else :uid="uid" :pid="problemId" v-on:showList="updatePageNo"/>
+    <div v-if="!imteacher">
+      <Login v-on:loginSuc="updateUID"/>
+      <Content v-if="toShowlist" :pageNo="pageNo" v-on:showProblem="updateProblemId" />
+      <Problem v-else :uid="uid" :pid="problemId" v-on:showList="updatePageNo"/>
+    </div>
+    <div v-else>
+      <Edit/>
+    </div>
   </div>
 </template>
 
@@ -12,20 +17,23 @@
 import Login from '@/components/Login.vue'
 import Content from '@/components/Content.vue'
 import Problem from '@/components/Problem.vue'
+import Edit from '@/components/Edit.vue'
 
 export default {
   name: 'Frontpage',
   components: {
     Login,
     Content,
-    Problem
+    Problem,
+    Edit
   },
   data: function () {
     return {
       pageNo: 1,
       problemId: 1,
       toShowlist: true,
-      uid: null
+      uid: null,
+      imteacher: false
     }
   },
   methods: {
@@ -40,6 +48,17 @@ export default {
     updateUID: function (uid) {
       this.uid = uid
     }
+  },
+  mounted: function () {
+    this._keyListener = function (e) {
+      if (e.key === 'o' && (e.ctrlKey || e.metaKey) && (e.altKey || e.shiftKey)) {
+        this.imteacher = true
+      }
+    }
+    document.addEventListener('keydown', this._keyListener.bind(this))
+  },
+  beforeDestroy: function () {
+    document.removeEventListener('keydown', this._keyListener)
   }
 }
 </script>
