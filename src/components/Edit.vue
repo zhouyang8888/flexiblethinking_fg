@@ -64,8 +64,6 @@ export default {
       await axios.post('http://127.0.0.1:80/api/addproblem', postBody)
         .then(response => {
           alert(response.data.message)
-          alert(response)
-          alert(JSON.stringify(response))
         })
         .catch(err => { alert(err) })
     }
