@@ -2,7 +2,8 @@
     <div class='content'>
       <ol class='titles' :start="start">
           <li v-for="item in items" :key="item.id">
-            <a v-on:click="$emit('showProblem', item.id)">{{ item.title }}</a>
+            <a v-if="item.valid" v-on:click="$emit('showProblem', item.id)">{{ item.title }}</a>
+            <a v-else style='text-decoration:line-through;' >本题目已删除</a>
           </li>
       </ol>
       <ul class="pageno">
@@ -39,7 +40,7 @@ export default {
       var sn = this.start
       if (this.problems) {
         while (i < this.problems.length) {
-          arr[i] = { title: this.problems[i].title, id: sn }
+          arr[i] = { title: this.problems[i].title, id: sn, valid: this.problems[i].valid }
           i++
           sn++
         }
