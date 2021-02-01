@@ -12,7 +12,11 @@
         <button type='submit' v-on:click="addnew()" >添加</button><button type='sumbit' v-on:click="submitall()" >提交</button>
       </div>
       <div v-else name='update' class='uproblems'>
-        <div><p id='pid'>题号</p><input type="text" id='queryID' class="text" value="0" /><button type='submit' v-on:click="searchByID" >查询</button><p id='pstatus' style='display:none;'>该题目已经删除，可点击“更新”重启</p></div>
+        <div>
+          <p id='pid'>题号</p><input type="text" id='queryID' class="text" value="0" />
+          <button type='submit' v-on:click="searchByID" >查询</button>
+          <p id='pstatus' style='display:none;'>该题目已经删除，可点击“更新”重启</p>
+        </div>
         <div><p>title</p><input type='text' id='title' class='text' /></div>
         <div><p>desc</p><textarea  id='desc' class='text'  /></div>
         <div><p>in</p><input type='text'  id='in' class='text'  /></div>

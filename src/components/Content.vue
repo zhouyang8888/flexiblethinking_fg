@@ -3,7 +3,7 @@
       <ol class='titles' :start="start">
           <li v-for="item in items" :key="item.id">
             <a v-if="item.valid" v-on:click="$emit('showProblem', item.id)">{{ item.title }}</a>
-            <a v-else style='text-decoration:line-through;' >本题目已删除</a>
+            <a v-else style='text-decoration:line-through;' ><span style='color:red'>本题目已删除</span><span style='font-size:smaller'>{{ item.title }}</span></a>
           </li>
       </ol>
       <ul class="pageno">
