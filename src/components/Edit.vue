@@ -13,7 +13,7 @@
       </div>
       <div v-else name='update' class='uproblems'>
         <div>
-          <p id='pid'>题号</p><input type="text" id='queryID' class="text" onmouseover="this.select()" value="1" />
+          <p id='pid'>题号</p><input type="text" id='queryID' class="text" onmouseover="this.select()" v-on:input="searchByID" value="1" />
           <button type='submit' v-on:click="searchByID" >查询</button>
           <p id='pstatus' style='display:none;'></p>
         </div>
@@ -109,7 +109,10 @@ export default {
       const postBody = { pid: questID, t: title, d: desc, i: input, o: output }
       await axios.post('http://127.0.0.1:80/api/updateByID', postBody)
         .then(response => {
-          alert(JSON.stringify(response.data))
+          if (title === response.data.title && desc === response.data.desc && input === response.data.in && output === response.data.out && response.data.valid) {
+            document.getElementById('pstatus').style = 'display:inline;color:red;font-size:smaller'
+            document.getElementById('pstatus').textContent = '更新成功'
+          }
         })
         .catch(err => { alert(err) })
     },
@@ -121,7 +124,14 @@ export default {
       const postBody = { pid: questID }
       await axios.post('http://127.0.0.1:80/api/deleteByID', postBody)
         .then(response => {
-          alert(JSON.stringify(response.data))
+          const title = document.getElementById('title').value.trim()
+          const desc = document.getElementById('desc').value.trim()
+          const input = document.getElementById('in').value.trim()
+          const output = document.getElementById('out').value.trim()
+          if (title === response.data.title && desc === response.data.desc && input === response.data.in && output === response.data.out && !response.data.valid) {
+            document.getElementById('pstatus').style = 'display:inline;color:red;font-size:smaller'
+            document.getElementById('pstatus').textContent = '删除成功'
+          }
         })
         .catch(err => { alert(err) })
     },
@@ -160,6 +170,8 @@ export default {
     this._keyListener = function (e) {
       if (e.ctrlKey && e.altKey && e.shiftKey) {
         this.add = !this.add
+      } else if (e.keyCode === 13) {
+        this.searchByID()
       }
     }
     document.addEventListener('keydown', this._keyListener.bind(this))

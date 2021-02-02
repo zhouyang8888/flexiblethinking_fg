@@ -73,6 +73,16 @@ export default {
         this.problem = response.data
       })
       .catch(err => { alert(err) })
+
+    this._keyListener = function (e) {
+      if (e.keyCode === 8) {
+        this.$emit('showList', Math.floor((this.pid - 1) / 10 + 1))
+      }
+    }
+    document.addEventListener('keydown', this._keyListener.bind(this))
+  },
+  beforeDestroy: function () {
+    document.removeEventListener('keydown', this._keyListener)
   }
 }
 </script>
