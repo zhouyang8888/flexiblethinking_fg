@@ -13,9 +13,9 @@
       </div>
       <div v-else name='update' class='uproblems'>
         <div>
-          <p id='pid'>题号</p><input type="text" id='queryID' class="text" value="0" />
+          <p id='pid'>题号</p><input type="text" id='queryID' class="text" onmouseover="this.select()" value="1" />
           <button type='submit' v-on:click="searchByID" >查询</button>
-          <p id='pstatus' style='display:none;'>该题目已经删除，可点击“更新”重启</p>
+          <p id='pstatus' style='display:none;'></p>
         </div>
         <div><p>title</p><input type='text' id='title' class='text' /></div>
         <div><p>desc</p><textarea  id='desc' class='text'  /></div>
@@ -83,8 +83,25 @@ export default {
         })
         .catch(err => { alert(err) })
     },
-    update: async function () {
+    getQueryID: function () {
       const questID = document.getElementById('queryID').value.trim()
+      if (questID === '') {
+        document.getElementById('pstatus').style = 'display:inline;color:red;font-size:smaller'
+        document.getElementById('pstatus').textContent = '<==输入题号'
+        return { status: false }
+      } else if (!questID.match(/^[0-9]+$/)) {
+        document.getElementById('pstatus').style = 'display:inline;color:red;font-size:smaller'
+        document.getElementById('pstatus').textContent = '题号只能包含0-9的数字'
+        return { status: false }
+      } else {
+        return { status: true, questID: questID }
+      }
+    },
+    update: async function () {
+      const ret = this.getQueryID()
+      if (ret.status === false) return
+      const questID = ret.questID
+
       const title = document.getElementById('title').value.trim()
       const desc = document.getElementById('desc').value.trim()
       const input = document.getElementById('in').value.trim()
@@ -97,7 +114,10 @@ export default {
         .catch(err => { alert(err) })
     },
     del: async function () {
-      const questID = document.getElementById('queryID').value.trim()
+      const ret = this.getQueryID()
+      if (ret.status === false) return
+      const questID = ret.questID
+
       const postBody = { pid: questID }
       await axios.post('http://127.0.0.1:80/api/deleteByID', postBody)
         .then(response => {
@@ -106,7 +126,10 @@ export default {
         .catch(err => { alert(err) })
     },
     searchByID: async function () {
-      const questID = document.getElementById('queryID').value.trim()
+      const ret = this.getQueryID()
+      if (ret.status === false) return
+      const questID = ret.questID
+
       const postBody = { pid: questID }
       await axios.post('http://127.0.0.1:80/api/searchByID', postBody)
         .then(response => {
@@ -115,8 +138,8 @@ export default {
             document.getElementById('desc').value = ''
             document.getElementById('in').value = ''
             document.getElementById('out').value = ''
-            document.getElementById('pstatus').style = 'display:none;'
-            alert('不存在该ID的题目!!!')
+            document.getElementById('pstatus').style = 'display:inline;color:red;font-size:smaller'
+            document.getElementById('pstatus').textContent = '不存在该ID的题目!!!'
           } else {
             document.getElementById('title').value = response.data.title
             document.getElementById('desc').value = response.data.desc
@@ -125,7 +148,8 @@ export default {
             if (response.data.valid) {
               document.getElementById('pstatus').style = 'display:none;'
             } else {
-              document.getElementById('pstatus').style = 'display:inline;color:red;'
+              document.getElementById('pstatus').style = 'display:inline;color:red;font-size:smaller'
+              document.getElementById('pstatus').textContent = '该题目已经删除，可点击“更新”重启'
             }
           }
         })
