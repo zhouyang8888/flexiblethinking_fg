@@ -77,6 +77,8 @@ export default {
     this._keyListener = function (e) {
       if (e.keyCode === 8) {
         this.$emit('showList', Math.floor((this.pid - 1) / 10 + 1))
+      } else if (e.keyCode === 13) {
+        this.submit()
       }
     }
     document.addEventListener('keydown', this._keyListener.bind(this))
