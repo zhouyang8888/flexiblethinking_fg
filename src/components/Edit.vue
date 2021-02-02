@@ -76,7 +76,6 @@ export default {
         const output = curLiNode.childNodes[3].childNodes[1].value.trim()
         postBody[i] = { title: title, desc: desc, in: input, out: output }
       }
-      alert(JSON.stringify(postBody))
       await axios.post('http://127.0.0.1:80/api/addproblem', postBody)
         .then(response => {
           alert(response.data.message)
