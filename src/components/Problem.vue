@@ -4,7 +4,7 @@
     <h5>title</h5><p>{{ pid }}_{{ title }}</p>
     <h5>desc</h5><p>{{ desc }}</p>
     <div class='container'>
-      <input name="answerin" type="text" v-model="answer" placeholder="Fill in your answer here." v-on:mouseover="refill" />
+      <input name="answerin" ref="answer" type="text" v-model="answer" placeholder="Fill in your answer here." v-on:mouseover="refill" />
       <button v-if="!show" type="submit" v-on:click="submit">提交</button>
       <img v-else-if="correct" src="../assets/right.png"/>
       <img v-else src="../assets/wrong.jpg"/>
@@ -39,7 +39,6 @@ export default {
   },
   methods: {
     submit: function () {
-      // alert('UID:' + this.uid)
       if (!this.uid || this.uid < 0) {
         alert('请先登录！！！')
         return
@@ -61,7 +60,8 @@ export default {
     refill: function () {
       if (this.correct !== true) {
         this.show = false
-        document.getElementsByName('answerin')[0].select()
+        this.$refs.answer.select()
+        // document.getElementsByName('answerin')[0].select()
       }
     }
   },
@@ -76,7 +76,9 @@ export default {
 
     this._keyListener = function (e) {
       if (e.keyCode === 8) {
-        this.$emit('showList', Math.floor((this.pid - 1) / 10 + 1))
+        if (document.activeElement !== this.$refs.answer) {
+          this.$emit('showList', Math.floor((this.pid - 1) / 10 + 1))
+        }
       } else if (e.keyCode === 13) {
         this.submit()
       }
