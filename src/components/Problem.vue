@@ -2,12 +2,14 @@
   <div>
   <div class='problem'>
     <h5>title</h5><p>{{ pid }}_{{ title }}</p>
-    <h5>desc</h5><p>{{ desc }}</p>
+    <h5>desc</h5>
+    <p>{{ desc}}</p>
+    <div v-if="this.imgs"><img v-for="img in this.imgs" :key="img" :src="'http://127.0.0.1:80/api/getImg/' + img" class="descimg" /></div>
     <div class='container'>
       <input name="answerin" ref="answer" type="text" v-model="answer" placeholder="Fill in your answer here." v-on:mouseover="refill" />
       <button v-if="!show" type="submit" v-on:click="submit">提交</button>
-      <img v-else-if="correct" src="../assets/right.png"/>
-      <img v-else src="../assets/wrong.jpg"/>
+      <img v-else-if="correct" src="../assets/right.png" class="markimg" />
+      <img v-else src="../assets/wrong.jpg" class="markimg" />
     </div>
   </div>
   <button id='return' v-on:click="$emit('showList', Math.floor((pid - 1) / 10 + 1))">返回</button>
@@ -35,7 +37,8 @@ export default {
     title: function () { return this.problem ? this.problem.title : '' },
     desc: function () { return this.problem ? this.problem.desc : '' },
     in: function () { return this.problem ? this.problem.in : '' },
-    out: function () { return this.problem ? this.problem.out : '' }
+    out: function () { return this.problem ? this.problem.out : '' },
+    imgs: function () { return this.problem ? this.problem.imgs : '' }
   },
   methods: {
     submit: function () {
@@ -116,8 +119,35 @@ export default {
    color: red;
    font-weight: bolder;
  }
+ .problem div {
+   text-align: left;
+   text-indent: 50px;
+ }
+ .descimg {
+   max-width:100px;
+   max-height:100px;
+   width: auto;
+   height: auto;
+   margin-right: 10px;
+   border:1px solid transparent;
+   transition: all .1s;
+ }
+ .descimg:hover {
+   border: 1px solid dimgrey;
+   border-radius: 5px;
+   -webkit-transform: scale(1.5);
+   -moz-transform: scale(1.5);
+   -ms-transform: scale(1.5);
+   -o-transform: scale(1.5);
+   transform: scale(1.5);
+ }
+ .descimg:active {
+   max-height: none;
+   max-width: none;
+ }
  .container {
    height: 20px;
+   padding-top: 20px;
  }
  .container input {
    width: 200px;
@@ -132,7 +162,7 @@ export default {
    float: left;
    margin-left: 20px;
  }
- img {
+ .markimg {
    width: 20px;
    height: 20px;
  }
@@ -140,6 +170,7 @@ export default {
    position: fixed;
    top: 85%;
    height: 20px;
+   z-index: -1;
  }
 
  button:hover {

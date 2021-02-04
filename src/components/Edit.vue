@@ -18,7 +18,12 @@
           <p id='pstatus' ref='pstatus' style='display:none;'></p>
         </div>
         <div><p>title</p><input type='text' ref='title' id='title' class='text' /></div>
-        <div><p>desc</p><textarea  ref='desc' id='desc' class='text'  /></div>
+        <div>
+          <p>desc</p><textarea  ref='desc' id='desc' class='text'  />
+          <img src='' ref='newimg' id='newimg' style='width: 300px; height: 300px; display: none' />
+          <input type='file' ref='saveImage' id='saveImage' name="saveImage" v-on:change="selectedImage" />
+          <input type='submit' ref='upImage' id='upImage' v-on:click="uploadImage" />
+        </div>
         <div><p>in</p><input type='text' ref='in' id='in' class='text'  /></div>
         <div><p>out</p><input type='text' ref='out' id='out' class='text'  /></div>
         <button type='submit' v-on:click="update()" >更新</button>
@@ -195,6 +200,40 @@ export default {
           }
         })
         .catch(err => { alert(err) })
+    },
+    selectedImage: function () {
+      var imgFile = this.$refs.saveImage.files[0]
+      alert(JSON.stringify(imgFile))
+      var fr = new FileReader()
+      fr.onload = function () {
+        document.getElementById('newimg').src = fr.result
+        document.getElementById('newimg').style.display = 'block'
+        // this.$refs.newimg.src = fr.result
+      }
+      // fr.readAsBinaryString(imgFile)
+      fr.readAsDataURL(imgFile)
+    },
+    uploadImage: async function () {
+      const ret = this.getQueryID()
+      if (ret.status === false) return
+      alert(JSON.stringify(ret))
+
+      const imgfile = this.$refs.saveImage.files[0]
+      console.log(imgfile)
+      const params = new FormData() // 创建一个form对象,以参数形式提供访问信息
+      params.append('pid', ret.questID)
+      params.append('file', imgfile, imgfile.name) // append向form表单添加数据
+      // 添加请求头，通过form添加的图片和文件的格式必须是multipart/form-data
+      const config = {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      }
+      await axios.post('http://127.0.0.1:80/api/saveImg', params, config)
+        .then(response => {
+          console.log(JSON.stringify(response.data))
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     }
   },
   mounted: function () {
