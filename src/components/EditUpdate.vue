@@ -18,7 +18,8 @@
           <img src='' ref='newimg' id='newimg' />
         </div>
         <input type='file' ref='saveImage' id='saveImage' name="saveImage" v-on:change="selectedImage" />
-        <input type='submit' ref='upImage' id='upImage' v-on:click="uploadImage" />
+        <button v-on:click="rollback()" >撤销</button>
+        <input type='submit' ref='upImage' id='upImage' v-on:click="uploadImage" style='position:relative; right:-100px; color:red;'/>
       </div>
       <div><p>in</p><input type='text' class='text' v-model="input" /></div>
       <div><p>out</p><input type='text' class='text' v-model="output" /></div>
@@ -71,7 +72,7 @@ export default {
       const desc = this.desc.trim()
       const input = this.input.trim()
       const output = this.output.trim()
-      const postBody = { pid: questID, t: title, d: desc, i: input, o: output }
+      const postBody = { pid: questID, t: title, d: desc, i: input, o: output, imgs: this.imgs }
       await axios.post('http://127.0.0.1:80/api/updateByID', postBody)
         .then(response => {
           if (title === response.data.title && desc === response.data.desc && input === response.data.in && output === response.data.out && response.data.valid) {
@@ -89,11 +90,7 @@ export default {
       const postBody = { pid: questID }
       await axios.post('http://127.0.0.1:80/api/deleteByID', postBody)
         .then(response => {
-          const title = this.title.trim()
-          const desc = this.desc.trim()
-          const input = this.input.trim()
-          const output = this.output.trim()
-          if (title === response.data.title && desc === response.data.desc && input === response.data.in && output === response.data.out && !response.data.valid) {
+          if (!response.data.valid) {
             this.pstatusStyle = 'display:inline;color:red;font-size:smaller'
             this.pstatusText = '删除成功'
           }
@@ -139,6 +136,10 @@ export default {
         document.getElementById('newimg').style.display = 'block'
       }
       fr.readAsDataURL(imgFile)
+    },
+    rollback: function () {
+      document.getElementById('newimg').src = ''
+      document.getElementById('newimg').style.display = 'none'
     },
     uploadImage: async function () {
       const ret = this.getQueryID()
