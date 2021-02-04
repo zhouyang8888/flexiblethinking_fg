@@ -13,14 +13,14 @@
       </div>
       <div v-else name='update' class='uproblems'>
         <div>
-          <p id='pid'>题号</p><input type="text" ref="queryID" id='queryID' class="text" onmouseover="this.select()" v-on:input="searchByID" value="1" />
+          <p id='pid'>题号</p><input type="text" ref="queryID" id='queryID' class="text" onmouseover="this.select()" v-on:input="searchByID" placeholder="填入题号" />
           <button type='submit' v-on:click="searchByID" >查询</button>
           <p id='pstatus' ref='pstatus' style='display:none;'></p>
         </div>
         <div><p>title</p><input type='text' ref='title' id='title' class='text' /></div>
         <div>
           <p>desc</p><textarea  ref='desc' id='desc' class='text'  />
-          <img src='' ref='newimg' id='newimg' style='width: 300px; height: 300px; display: none' />
+          <img src='' ref='newimg' id='newimg' />
           <input type='file' ref='saveImage' id='saveImage' name="saveImage" v-on:change="selectedImage" />
           <input type='submit' ref='upImage' id='upImage' v-on:click="uploadImage" />
         </div>
@@ -92,7 +92,7 @@ export default {
       // document.getElementById('queryID').value.trim()
       if (questID === '') {
         this.$refs.pstatus.style = 'display:inline;color:red;font-size:smaller'
-        this.$refs.pstatus.textContent = '<==输入题号'
+        this.$refs.pstatus.textContent = '<==填入题号'
         // document.getElementById('pstatus').style = 'display:inline;color:red;font-size:smaller'
         // document.getElementById('pstatus').textContent = '<==输入题号'
         return { status: false }
@@ -203,25 +203,21 @@ export default {
     },
     selectedImage: function () {
       var imgFile = this.$refs.saveImage.files[0]
-      alert(JSON.stringify(imgFile))
       var fr = new FileReader()
       fr.onload = function () {
         document.getElementById('newimg').src = fr.result
         document.getElementById('newimg').style.display = 'block'
-        // this.$refs.newimg.src = fr.result
       }
-      // fr.readAsBinaryString(imgFile)
       fr.readAsDataURL(imgFile)
     },
     uploadImage: async function () {
       const ret = this.getQueryID()
       if (ret.status === false) return
-      alert(JSON.stringify(ret))
 
-      const imgfile = this.$refs.saveImage.files[0]
-      console.log(imgfile)
       const params = new FormData() // 创建一个form对象,以参数形式提供访问信息
       params.append('pid', ret.questID)
+
+      const imgfile = this.$refs.saveImage.files[0]
       params.append('file', imgfile, imgfile.name) // append向form表单添加数据
       // 添加请求头，通过form添加的图片和文件的格式必须是multipart/form-data
       const config = {
@@ -308,5 +304,10 @@ button {
 p {
   font-size: larger;
   color:green;
+}
+#newimg {
+  max-width: 100px;
+  max-height: 100px;
+  display: none;
 }
 </style>

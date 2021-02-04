@@ -142,8 +142,14 @@ export default {
    transform: scale(1.5);
  }
  .descimg:active {
-   max-height: none;
-   max-width: none;
+   max-height: 512px;
+   max-width: 1024px;
+   position: fixed;
+   top:20%;
+   right:20%;
+   border: 1px solid dimgrey;
+   border-radius: 5px;
+   margin-right: 0;
  }
  .container {
    height: 20px;
