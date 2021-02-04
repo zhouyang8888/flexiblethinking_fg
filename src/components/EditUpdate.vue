@@ -9,6 +9,9 @@
       <div><p>title</p><input type='text' class='text' v-model="title"/></div>
       <div>
         <p>desc</p><textarea  class='text' v-model="desc" />
+        <div v-if="this.imgs">
+          <img v-for="img in this.imgs" :key="img" :src="'http://127.0.0.1:80/api/getImg/' + img" :style="descimgstyle" />
+        </div>
         <img src='' ref='newimg' id='newimg' />
         <input type='file' ref='saveImage' id='saveImage' name="saveImage" v-on:change="selectedImage" />
         <input type='submit' ref='upImage' id='upImage' v-on:click="uploadImage" />
@@ -35,7 +38,9 @@ export default {
       title: '',
       desc: '',
       input: '',
-      output: ''
+      output: '',
+      imgs: [],
+      descimgstyle: 'max-width: 100px;max-height: 100px;display: inline;'
     }
   },
   methods: {
@@ -111,6 +116,7 @@ export default {
             this.desc = response.data.desc
             this.input = response.data.in
             this.output = response.data.out
+            this.imgs = response.data.imgs
             if (response.data.valid) {
               this.pstatusStyle = 'display:none;'
             } else {
