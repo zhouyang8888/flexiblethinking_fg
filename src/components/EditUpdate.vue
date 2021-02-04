@@ -10,9 +10,13 @@
       <div>
         <p>desc</p><textarea  class='text' v-model="desc" />
         <div v-if="this.imgs">
-          <img v-for="img in this.imgs" :key="img" :src="'http://127.0.0.1:80/api/getImg/' + img" :style="descimgstyle" />
+          <div v-for="img in this.imgs" :key="img" v-on:mouseover="mouseenterImg(img)" v-on:mouseout="mouseleaveImg(img)" style='display:inline'>
+            <img :src="'http://127.0.0.1:80/api/getImg/' + img" :style="descimgstyle"/><button style="display:none" :id="'delete_' + img" v-on:click="removeOldImg(img)">删除</button>
+          </div>
         </div>
-        <img src='' ref='newimg' id='newimg' />
+        <div>
+          <img src='' ref='newimg' id='newimg' />
+        </div>
         <input type='file' ref='saveImage' id='saveImage' name="saveImage" v-on:change="selectedImage" />
         <input type='submit' ref='upImage' id='upImage' v-on:click="uploadImage" />
       </div>
@@ -156,6 +160,15 @@ export default {
         .catch(function (error) {
           console.log(error)
         })
+    },
+    removeOldImg: function (imgid) {
+      this.imgs.splice(this.imgs.indexOf(imgid), 1)
+    },
+    mouseenterImg: function (img) {
+      document.getElementById('delete_' + img).style = 'display:inline;border-width:0;position:sticky;left:0;top:0;color:red'
+    },
+    mouseleaveImg: function (img) {
+      document.getElementById('delete_' + img).style.display = 'none'
     }
   },
   mounted: function () {
