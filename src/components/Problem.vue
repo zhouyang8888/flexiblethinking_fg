@@ -4,7 +4,7 @@
     <h5>title</h5><p>{{ pid }}_{{ title }}</p>
     <h5>desc</h5>
     <p>{{ desc}}</p>
-    <div v-if="this.imgs"><img v-for="img in this.imgs" :key="img" :src="'http://127.0.0.1:80/api/getImg/' + img" class="descimg" /></div>
+    <div v-if="this.imgs"><img v-for="(img, idx) in this.imgs" :key="img + '_' + idx" :src="'http://127.0.0.1:80/api/getImg/' + img" class="descimg" /></div>
     <div class='container'>
       <input name="answerin" ref="answer" type="text" v-model="answer" placeholder="Fill in your answer here." v-on:mouseover="refill" />
       <button v-if="!show" type="submit" v-on:click="submit">提交</button>

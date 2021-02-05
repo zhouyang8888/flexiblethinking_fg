@@ -10,13 +10,13 @@
       <div>
         <p>desc</p><textarea  class='text' v-model="desc" />
         <div v-if="this.imgs">
-          <div v-for="img in this.imgs" :key="img" v-on:mouseover="mouseenterImg(img)" v-on:mouseout="mouseleaveImg(img)" style='display:inline'>
-            <img :src="'http://127.0.0.1:80/api/getImg/' + img" :style="descimgstyle"/><button style="display:none" :id="'delete_' + img" v-on:click="removeOldImg(img, false)">删除</button>
+          <div v-for="(img, idx) in this.imgs" :key="img + '_' + idx" v-on:mouseover="mouseenterImg(img)" v-on:mouseout="mouseleaveImg(img)" style='display:inline'>
+            <img :src="'http://127.0.0.1:80/api/getImg/' + img" :style="descimgstyle"/><button style="display:none" :id="'delete_' + img" v-on:click="removeOldImg(idx)">删除</button>
           </div>
         </div>
         <div v-if="this.newimgfiles">
           <div v-for="img in this.newimgfiles" :key="img.id" v-on:mouseover="mouseenterImg(img.id)" v-on:mouseout="mouseleaveImg(img.id)" style='display:inline'>
-            <img :src="img.src" :style="descimgstyle"/><button style="display:none" :id="'delete_' + img.id" v-on:click="removeOldImg(img.id, true)">撤销</button>
+            <img :src="img.src" :style="descimgstyle"/><button style="display:none" :id="'delete_' + img.id" v-on:click="rollback(img.id)">撤销</button>
           </div>
         </div>
         <input type='file' ref='saveImage' id='saveImage' name='saveImage' multiple='multiple' v-on:change="selectedImage" />
@@ -113,6 +113,8 @@ export default {
             this.desc = ''
             this.input = ''
             this.output = ''
+            this.imgs = []
+            this.newimgfiles = []
             this.pstatusStyle = 'display:inline;color:red;font-size:smaller'
             this.pstatusText = '不存在该ID的题目!!!'
           } else {
@@ -121,6 +123,7 @@ export default {
             this.input = response.data.in
             this.output = response.data.out
             this.imgs = response.data.imgs
+            this.newimgfiles = []
             if (response.data.valid) {
               this.pstatusStyle = 'display:none;'
             } else {
@@ -155,9 +158,13 @@ export default {
         }
       }
     },
-    rollback: function () {
-      document.getElementById('newimg').src = ''
-      document.getElementById('newimg').style.display = 'none'
+    rollback: function (imgid) {
+      for (let j = 0; j < this.newimgfiles.length; j++) {
+        if (this.newimgfiles[j].id === imgid) {
+          this.newimgfiles.splice(j, 1)
+          break
+        }
+      }
     },
     uploadImage: async function () {
       const ret = this.getQueryID()
@@ -165,10 +172,11 @@ export default {
 
       const params = new FormData() // 创建一个form对象,以参数形式提供访问信息
       params.append('pid', ret.questID)
+      params.append('iid', this.imgs)
 
       for (let j = 0; j < this.newimgfiles.length; j++) {
         const nif = this.newimgfiles[j]
-        params.append(nif.id, nif.file, nif.file.name) // append向form表单添加数据??????????????
+        params.append('file', nif.file, nif.file.name) // append向form表单添加数据??????????????
       }
       // 添加请求头，通过form添加的图片和文件的格式必须是multipart/form-data
       const config = {
@@ -182,17 +190,8 @@ export default {
           console.log(error)
         })
     },
-    removeOldImg: function (imgid, isnew) {
-      if (!isnew) {
-        this.imgs.splice(this.imgs.indexOf(imgid), 1)
-      } else {
-        for (let j = 0; j < this.newimgfiles.length; j++) {
-          if (this.newimgfiles[j].id === imgid) {
-            this.newimgfiles.splice(j, 1)
-            break
-          }
-        }
-      }
+    removeOldImg: function (idx) {
+      this.imgs.splice(idx, 1)
     },
     mouseenterImg: function (img) {
       document.getElementById('delete_' + img).style = 'display:inline;border-width:0;position:sticky;left:0;top:0;color:red'
