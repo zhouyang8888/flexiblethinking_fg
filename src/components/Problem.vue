@@ -150,6 +150,7 @@ export default {
    border: 1px solid dimgrey;
    border-radius: 5px;
    margin-right: 0;
+   z-index: 10;
  }
  .container {
    height: 20px;
