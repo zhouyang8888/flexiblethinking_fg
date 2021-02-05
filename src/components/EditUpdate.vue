@@ -174,11 +174,14 @@ export default {
 
       const params = new FormData() // 创建一个form对象,以参数形式提供访问信息
       params.append('pid', ret.questID)
-      params.append('iid', this.imgs)
-
-      for (let j = 0; j < this.newimgfiles.length; j++) {
-        const nif = this.newimgfiles[j]
-        params.append('file', nif.file, nif.file.name) // append向form表单添加数据??????????????
+      if (this.imgs) {
+        params.append('iid', this.imgs)
+      }
+      if (this.newimgfiles) {
+        for (let j = 0; j < this.newimgfiles.length; j++) {
+          const nif = this.newimgfiles[j]
+          params.append('file', nif.file, nif.file.name) // append向form表单添加数据??????????????
+        }
       }
       // 添加请求头，通过form添加的图片和文件的格式必须是multipart/form-data
       const config = {
