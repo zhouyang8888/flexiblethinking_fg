@@ -10,8 +10,8 @@
       <div>
         <p>desc</p><textarea  class='text' v-model="desc" />
         <div v-if="this.imgs">
-          <div v-for="(img, idx) in this.imgs" :key="img + '_' + idx" v-on:mouseover="mouseenterImg(img)" v-on:mouseout="mouseleaveImg(img)" style='display:inline'>
-            <img :src="'http://127.0.0.1:80/api/getImg/' + img" :style="descimgstyle"/><button style="display:none" :id="'delete_' + img" v-on:click="removeOldImg(idx)">删除</button>
+          <div v-for="(img, idx) in this.imgs" :key="img + '_' + idx" v-on:mouseover="mouseenterImg(img, idx)" v-on:mouseout="mouseleaveImg(img, idx)" style='display:inline'>
+            <img :src="'http://127.0.0.1:80/api/getImg/' + img" :style="descimgstyle"/><button style="display:none" :id="'delete_' + img + '_' + idx" v-on:click="removeOldImg(idx)">删除</button>
           </div>
         </div>
         <div v-if="this.newimgfiles">
@@ -20,7 +20,7 @@
           </div>
         </div>
         <input type='file' ref='saveImage' id='saveImage' name='saveImage' multiple='multiple' v-on:change="selectedImage" />
-        <input type='submit' ref='upImage' id='upImage' v-on:click="uploadImage" style='position:relative; right:-100px; color:red;' />
+        <input type='submit' ref='upImage' id='upImage' v-on:click="uploadImage" style='position:relative; right:-100px; color:red;' value='更新图片' />
       </div>
       <div><p>in</p><input type='text' class='text' v-model="input" /></div>
       <div><p>out</p><input type='text' class='text' v-model="output" /></div>
@@ -75,15 +75,17 @@ export default {
       const desc = this.desc.trim()
       const input = this.input.trim()
       const output = this.output.trim()
-      const postBody = { pid: questID, t: title, d: desc, i: input, o: output, imgs: this.imgs }
+      const postBody = { pid: questID, t: title, d: desc, i: input, o: output }
       await axios.post('http://127.0.0.1:80/api/updateByID', postBody)
         .then(response => {
           if (title === response.data.title && desc === response.data.desc && input === response.data.in && output === response.data.out && response.data.valid) {
             this.pstatusStyle = 'display:inline;color:red;font-size:smaller'
-            this.pstatusText = '更新成功'
+            this.pstatusText = '内容更新成功'
           }
         })
         .catch(err => { alert(err) })
+
+      this.uploadImage()
     },
     del: async function () {
       const ret = this.getQueryID()
@@ -187,17 +189,19 @@ export default {
           alert(JSON.stringify(response.data))
         })
         .catch(function (error) {
-          console.log(error)
+          alert(error)
         })
     },
     removeOldImg: function (idx) {
       this.imgs.splice(idx, 1)
     },
-    mouseenterImg: function (img) {
-      document.getElementById('delete_' + img).style = 'display:inline;border-width:0;position:sticky;left:0;top:0;color:red'
+    mouseenterImg: function (img, idx) {
+      const id = 'delete_' + img + (idx !== undefined ? '_' + idx : '')
+      document.getElementById(id).style = 'display:inline;border-width:0;position:sticky;left:0;top:0;color:red'
     },
-    mouseleaveImg: function (img) {
-      document.getElementById('delete_' + img).style.display = 'none'
+    mouseleaveImg: function (img, idx) {
+      const id = 'delete_' + img + (idx !== undefined ? '_' + idx : '')
+      document.getElementById(id).style = 'display:none'
     }
   },
   mounted: function () {
