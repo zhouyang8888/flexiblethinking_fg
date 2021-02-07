@@ -135,10 +135,9 @@ export default {
 .login {
     display: block;
     position: absolute;
-    top:50px;
+    bottom:80%;
     right:20%;
     width:160px;
-    height:120px;
 }
 .login div {
     width: 100%;
