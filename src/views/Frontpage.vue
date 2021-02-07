@@ -3,7 +3,7 @@
     <div id='logo'><p>FlexibleThinking</p></div>
     <div v-if="!imteacher">
       <Login v-on:loginSuc="updateUID"/>
-      <Content v-if="toShowlist" :pageNo="pageNo" v-on:showProblem="updateProblemId" />
+      <Content v-if="toShowlist" :ppageNo="pageNo" v-on:showProblem="updateProblemId" />
       <Problem v-else :uid="uid" :pid="problemId" v-on:showList="updatePageNo"/>
     </div>
     <div v-else>

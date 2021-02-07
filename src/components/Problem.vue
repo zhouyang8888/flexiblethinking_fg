@@ -64,7 +64,6 @@ export default {
       if (this.correct !== true) {
         this.show = false
         this.$refs.answer.select()
-        // document.getElementsByName('answerin')[0].select()
       }
     }
   },
@@ -79,7 +78,7 @@ export default {
 
     this._keyListener = function (e) {
       if (e.keyCode === 8) {
-        if (document.activeElement !== this.$refs.answer) {
+        if (document.activeElement.tagName.toLowerCase() === 'body') {
           this.$emit('showList', Math.floor((this.pid - 1) / 10 + 1))
         }
       } else if (e.keyCode === 13) {

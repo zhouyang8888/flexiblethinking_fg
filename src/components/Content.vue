@@ -22,10 +22,11 @@ import axios from 'axios'
 export default {
   name: 'Content',
   props: {
-    pageNo: { type: Number, default: 1 }
+    ppageNo: { type: Number, default: 1 }
   },
   data: function () {
     return {
+      pageNo: this.ppageNo,
       problems: [],
       pageCount: 0,
       pageStep: 10,
