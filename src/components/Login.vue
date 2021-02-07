@@ -3,8 +3,8 @@
     <div>
       <p ref='warning' :style="warningStyle">{{ warningInfo }}</p>
     </div>
-    <div><strong>姓名</strong><input type="text" ref='name' v-model="name" placeholder='name' v-on:mouseenter="$refs.name.style = inputTextNormalStyle" /></div>
-    <div><strong>密码</strong><input type="text" ref='pswd' v-model="pswd" placeholder='password' v-on:mouseenter="$refs.pswd.style = inputTextNormalStyle" /></div>
+    <div><strong>姓名</strong><input type="text" ref='name' v-model="name" placeholder='name' v-on:input="$refs.name.style = inputTextNormalStyle" v-on:mouseenter="$refs.name.style = inputTextNormalStyle; $refs.name.select()" /></div>
+    <div><strong>密码</strong><input type="text" ref='pswd' v-model="pswd" placeholder='password'  v-on:input="$refs.pswd.style = inputTextNormalStyle" v-on:mouseenter="$refs.pswd.style = inputTextNormalStyle; $refs.pswd.select()" /></div>
     <div><input name="reg" type="submit" value="注册" v-on:click="register"/><input name="login" type="submit" value="登录" v-on:click="login"/></div>
   </div>
 </template>
@@ -61,11 +61,13 @@ export default {
         this.$refs.name.style = this.inputTextWarningStyle
         this.warningInfo = '填入用户名'
         this.warningStyle = this.redWarningStyle
+        this.$emit('loginSuc', -1)
         return
       } else if (!this.pswd) {
         this.$refs.pswd.style = this.inputTextWarningStyle
         this.warningInfo = '请填入密码'
         this.warningStyle = this.redWarningStyle
+        this.$emit('loginSuc', -1)
         return
       }
       const postBody = { name: this.name, md5pswd: md5(this.pswd) }
@@ -76,9 +78,9 @@ export default {
           if (resp.statusCode >= 0) {
             if (response.data.qwer) {
               vueCookies.set('qwer', response.data.qwer, '1d')
-              this.$emit('loginSuc', resp.uid)
             }
             this.warningStyle = this.greenWarningStyle
+            this.$emit('loginSuc', resp.uid)
           } else {
             if (resp.statusCode === -11) {
               this.$refs.pswd.style = this.inputTextWarningStyle
@@ -86,9 +88,11 @@ export default {
               this.$refs.name.style = this.inputTextWarningStyle
             }
             this.$refs.warning.style = this.redWarningStyle
+            this.$emit('loginSuc', -1)
           }
         })
         .catch(Error => {
+          this.$emit('loginSuc', -1)
           alert('login ' + Error + ' : ' + this.name + ' ' + this.pswd)
         })
     }
@@ -113,6 +117,15 @@ export default {
         break
       }
     }
+
+    this._keyListener = function (e) {
+      if (e.keyCode === 13) {
+        if (document.activeElement === this.$refs.name || document.activeElement === this.$refs.pswd) {
+          this.login()
+        }
+      }
+    }
+    document.addEventListener('keydown', this._keyListener.bind(this))
   }
 }
 </script>

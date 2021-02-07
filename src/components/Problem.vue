@@ -78,10 +78,11 @@ export default {
 
     this._keyListener = function (e) {
       if (e.keyCode === 8) {
-        if (document.activeElement.tagName.toLowerCase() === 'body') {
+        if (document.activeElement.tagName.toLowerCase() !== 'input') {
           this.$emit('showList', Math.floor((this.pid - 1) / 10 + 1))
         }
-      } else if (e.keyCode === 13) {
+      } else if (e.keyCode === 13 &&
+       (document.activeElement === this.$refs.answer || document.activeElement.tagName.toLowerCase() !== 'input')) {
         this.submit()
       }
     }
