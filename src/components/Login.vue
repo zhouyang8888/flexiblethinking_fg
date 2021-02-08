@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="login" v-on:mouseenter="pop" v-on:mouseleave="hide">
     <div>
       <p ref='warning' :style="warningStyle">{{ warningInfo }}</p>
     </div>
@@ -7,6 +7,10 @@
     <div><strong>密码</strong><input type="password" ref='pswd' v-model="pswd" placeholder='password'  v-on:input="$refs.pswd.style = inputTextNormalStyle" v-on:mouseenter="$refs.pswd.style = inputTextNormalStyle; $refs.pswd.select()" /></div>
     <div v-if="!logined"><input name="reg" type="submit" value="注册" v-on:click="register"/><input name="login" type="submit" value="登录" v-on:click="login"/></div>
     <div v-else><input name="logout" type="submit" value="退出" v-on:click="logout"/></div>
+    <div class='statistics' ref='statistics'>
+      <p>提交正确: <span>{{ numSubmitOK }}</span> / <span>{{ numSubmits }}</span></p>
+      <p>问题正确: <span>{{ numProbOK }}</span> / <span>{{ numProb }}</span></p>
+    </div>
   </div>
 </template>
 
@@ -21,11 +25,17 @@ export default {
   },
   data: function () {
     return {
+      uid: -1,
       logined: false,
       name: '',
       pswd: '',
       warningInfo: '',
-      warningStyle: this.invisibleWarningStyle
+      warningStyle: this.invisibleWarningStyle,
+
+      numSubmits: 0,
+      numProb: 0,
+      numSubmitOK: 0,
+      numProbOK: 0
     }
   },
   computed: {
@@ -64,6 +74,7 @@ export default {
         this.warningInfo = '填入用户名'
         this.warningStyle = this.redWarningStyle
         this.$emit('loginSuc', -1)
+        this.uid = -1
         vueCookies.remove('qwer')
         return
       } else if (!this.pswd) {
@@ -71,6 +82,7 @@ export default {
         this.warningInfo = '请填入密码'
         this.warningStyle = this.redWarningStyle
         this.$emit('loginSuc', -1)
+        this.uid = -1
         vueCookies.remove('qwer')
         return
       }
@@ -85,6 +97,7 @@ export default {
             }
             this.warningStyle = this.greenWarningStyle
             this.$emit('loginSuc', resp.uid)
+            this.uid = resp.uid
             this.logined = true
           } else {
             if (resp.statusCode === -11) {
@@ -94,22 +107,44 @@ export default {
             }
             this.$refs.warning.style = this.redWarningStyle
             this.$emit('loginSuc', -1)
+            this.uid = -1
             vueCookies.remove('qwer')
           }
         })
         .catch(Error => {
           this.$emit('loginSuc', -1)
+          this.uid = -1
           vueCookies.remove('qwer')
           alert('login ' + Error + ' : ' + this.name + ' ' + this.pswd)
         })
     },
     logout: function () {
       this.$emit('loginSuc', -1)
+      this.uid = -1
       vueCookies.remove('qwer')
       this.logined = false
       this.warningInfo = '请登录'
       this.warningStyle = this.redWarningStyle
       this.pswd = ''
+    },
+    pop: function () {
+      if (this.uid > 0) {
+        const postBody = { uid: this.uid }
+        axios.post('http://127.0.0.1:80/api/statistics', postBody)
+          .then(response => {
+            this.numSubmits = response.data.numSubmits
+            this.numSubmitOK = response.data.numSubmitOK
+            this.numProb = response.data.numProb
+            this.numProbOK = response.data.numProbOK
+            this.$refs.statistics.style.display = 'block'
+          })
+          .catch(e => {
+            alert(e)
+          })
+      }
+    },
+    hide: function () {
+      this.$refs.statistics.style.display = 'none'
     }
   },
   mounted: function () {
@@ -124,6 +159,7 @@ export default {
             if (response.data.statusCode >= 0) {
               this.name = response.data.message
               this.$emit('loginSuc', response.data.uid)
+              this.uid = response.data.uid
               this.logined = true
             }
           })
@@ -174,5 +210,20 @@ export default {
     background-color: white;
     color:black;
     width:100px;
+}
+.statistics {
+  display: none;
+  position: fixed;
+  top: 10%;
+  left: 80%;
+  transform: translateX(0%) translateY(-50%);
+  z-index: 100;
+}
+.statistics p {
+  text-align: left;
+}
+.statistics p span {
+  color: red;
+  width: 20px;
 }
 </style>
