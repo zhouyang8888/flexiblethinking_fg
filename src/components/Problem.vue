@@ -9,7 +9,11 @@
       <input v-if="!source" name="answerin" ref="answer" type="text" v-model="answer" placeholder="Fill in your answer here." v-on:mouseover="refill" />
       <input v-else name="answerin" ref="answer" type="textarea" v-model="answer" placeholder="Fill in your code here." v-on:mouseover="refill" />
       <div v-if="!show">
-        <button type="submit" v-on:click="submit">提交</button><form><input type='radio' name='answtype' v-on:click="setAnswerType(true)" value='code'/><input type='radio' name='answtype' v-on:click="setAnswerType(false)" value='answer'/></form>
+        <button type="submit" v-on:click="submit">提交</button>
+        <form>
+          <input type='radio' name='answtype' v-on:click="setAnswerType(true)" /><p>源码</p>
+          <input type='radio' name='answtype' v-on:click="setAnswerType(false)" /><p>答案</p>
+        </form>
       </div>
       <img v-else-if="correct" src="../assets/right.png" class="markimg" />
       <img v-else src="../assets/wrong.jpg" class="markimg" />
@@ -178,8 +182,20 @@ export default {
    float: left;
    margin-left: 20px;
  }
+ form p {
+   margin: 0;
+   text-align: left;
+   font-size: smaller;
+   float: left;
+   text-indent: 0;
+ }
+ form p::first-letter {
+   font-size:unset;
+   color: red;
+   font-weight:unset;
+ }
  input[type="radio"] {
-   widows: 20px;
+   width: 20px;
    float: left;
  }
  .container img {
