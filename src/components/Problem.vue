@@ -7,9 +7,9 @@
     <div v-if="this.imgs"><img v-for="(img, idx) in this.imgs" :key="img + '_' + idx" :src="'http://127.0.0.1:80/api/getImg/' + img" class="descimg" /></div>
     <div class='container'>
       <input v-if="!source" name="answerin" ref="answer" type="text" v-model="answer" placeholder="Fill in your answer here." v-on:mouseover="refill" />
-      <input v-else name="answerin" ref="answer" type="textarea" v-model="answer" placeholder="Fill in your answer here." v-on:mouseover="refill" />
+      <input v-else name="answerin" ref="answer" type="textarea" v-model="answer" placeholder="Fill in your code here." v-on:mouseover="refill" />
       <div v-if="!show">
-        <button type="submit" v-on:click="submit">提交</button><input type="radio" v-on:click="setAnswerType(true)" value='source'/><input type='radio' v-on:click="setAnswerType(false)" value='answer'/>
+        <button type="submit" v-on:click="submit">提交</button><form><input type='radio' name='answtype' v-on:click="setAnswerType(true)" value='code'/><input type='radio' name='answtype' v-on:click="setAnswerType(false)" value='answer'/></form>
       </div>
       <img v-else-if="correct" src="../assets/right.png" class="markimg" />
       <img v-else src="../assets/wrong.jpg" class="markimg" />
@@ -161,16 +161,26 @@ export default {
    z-index: 10;
  }
  .container {
-   height: 20px;
    padding-top: 20px;
+   height: 60%;
  }
- .container input {
+ .container input[type="text"] {
    width: 200px;
+   height: 20px;
+   float: left;
+ }
+ .container input[type="textarea"] {
+   width: 60%;
+   height: 60%;
    float: left;
  }
  .container button {
    float: left;
    margin-left: 20px;
+ }
+ input[type="radio"] {
+   widows: 20px;
+   float: left;
  }
  .container img {
    width: auto;
