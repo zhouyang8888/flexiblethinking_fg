@@ -6,8 +6,11 @@
     <p>{{ desc}}</p>
     <div v-if="this.imgs"><img v-for="(img, idx) in this.imgs" :key="img + '_' + idx" :src="'http://127.0.0.1:80/api/getImg/' + img" class="descimg" /></div>
     <div class='container'>
-      <input name="answerin" ref="answer" type="text" v-model="answer" placeholder="Fill in your answer here." v-on:mouseover="refill" />
-      <button v-if="!show" type="submit" v-on:click="submit">提交</button>
+      <input v-if="!source" name="answerin" ref="answer" type="text" v-model="answer" placeholder="Fill in your answer here." v-on:mouseover="refill" />
+      <input v-else name="answerin" ref="answer" type="textarea" v-model="answer" placeholder="Fill in your answer here." v-on:mouseover="refill" />
+      <div v-if="!show">
+        <button type="submit" v-on:click="submit">提交</button><input type="radio" v-on:click="setAnswerType(true)" value='source'/><input type='radio' v-on:click="setAnswerType(false)" value='answer'/>
+      </div>
       <img v-else-if="correct" src="../assets/right.png" class="markimg" />
       <img v-else src="../assets/wrong.jpg" class="markimg" />
     </div>
@@ -30,7 +33,8 @@ export default {
       problem: '',
       answer: '',
       show: false,
-      correct: false
+      correct: false,
+      source: false
     }
   },
   computed: {
@@ -51,7 +55,8 @@ export default {
         return
       }
       const postBody = { uid: this.uid, id: this.pid, ans: this.answer }
-      axios.post('http://127.0.0.1:80/api/submit', postBody)
+      const url = 'http://127.0.0.1:80/api/' + (this.source ? 'submitsource' : 'submit')
+      axios.post(url, postBody)
         .then(response => {
           this.correct = response.data.correct
           this.show = true
@@ -65,6 +70,9 @@ export default {
         this.show = false
         this.$refs.answer.select()
       }
+    },
+    setAnswerType: function (value) {
+      this.source = value
     }
   },
   /* Fetch problem content when mounted */
