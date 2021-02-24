@@ -62,7 +62,7 @@ export default {
           this.show = true
         })
         .catch(Error => {
-          alert('Submit Error:' + '/submit?id=' + this.pid + '&answer=' + this.answer)
+          alert(Error)
         })
     },
     refill: function () {
