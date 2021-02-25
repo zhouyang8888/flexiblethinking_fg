@@ -94,8 +94,7 @@ export default {
           this.$emit('showList', Math.floor((this.pid - 1) / 10 + 1))
         }
       } else if (e.keyCode === 13) { // enter
-        if (document.activeElement === this.$refs.source) {
-        } else if (document.activeElement === this.$refs.answer || document.activeElement.tagName.toLowerCase() !== 'input') {
+        if (document.activeElement === this.$refs.answer || (document.activeElement.tagName.toLowerCase() !== 'input' && !this.source)) {
           this.submit()
         }
       }
