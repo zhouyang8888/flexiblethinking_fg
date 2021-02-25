@@ -7,7 +7,7 @@
     <div v-if="this.imgs"><img v-for="(img, idx) in this.imgs" :key="img + '_' + idx" :src="'http://127.0.0.1:80/api/getImg/' + img" class="descimg" /></div>
     <div class='container'>
       <input v-if="!source" name="answerin" ref="answer" type="text" v-model="answer" placeholder="Fill in your answer here." v-on:mouseover="refill" />
-      <textarea v-else name="answerin" ref="answer" v-model="answer" placeholder="Fill in your code here." v-on:mouseover="refill" />
+      <textarea v-else name="answerin" ref="source" v-model="answer" placeholder="Fill in your code here." v-on:mouseover="refill" />
       <div v-if="!show">
         <button type="submit" v-on:click="submit">提交</button>
         <form>
@@ -89,13 +89,13 @@ export default {
       .catch(err => { alert(err) })
 
     this._keyListener = function (e) {
-      if (!this.source) {
-        if (e.keyCode === 8) {
-          if (document.activeElement.tagName.toLowerCase() !== 'input') {
-            this.$emit('showList', Math.floor((this.pid - 1) / 10 + 1))
-          }
-        } else if (e.keyCode === 13 &&
-         (document.activeElement === this.$refs.answer || document.activeElement.tagName.toLowerCase() !== 'input')) {
+      if (e.keyCode === 8) { // backspace
+        if (document.activeElement.tagName.toLowerCase() !== 'input' && document.activeElement !== this.$refs.source) {
+          this.$emit('showList', Math.floor((this.pid - 1) / 10 + 1))
+        }
+      } else if (e.keyCode === 13) { // enter
+        if (document.activeElement === this.$refs.source) {
+        } else if (document.activeElement === this.$refs.answer || document.activeElement.tagName.toLowerCase() !== 'input') {
           this.submit()
         }
       }
