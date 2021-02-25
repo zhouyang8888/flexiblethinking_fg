@@ -3,8 +3,8 @@
     <div>
       <p ref='warning' :style="warningStyle">{{ warningInfo }}</p>
     </div>
-    <div><strong>姓名</strong><input type="text" ref='name' v-model="name" placeholder='name' v-on:input="$refs.name.style = inputTextNormalStyle" v-on:mouseenter="$refs.name.style = inputTextNormalStyle; $refs.name.select()" /></div>
-    <div><strong>密码</strong><input type="password" ref='pswd' v-model="pswd" placeholder='password'  v-on:input="$refs.pswd.style = inputTextNormalStyle" v-on:mouseenter="$refs.pswd.style = inputTextNormalStyle; $refs.pswd.select()" /></div>
+    <div><strong>姓名</strong><input type="text" ref='name' class='logintext' v-model="name" placeholder='name' v-on:input="$refs.name.style = inputTextNormalStyle" v-on:mouseenter="$refs.name.style = inputTextNormalStyle; $refs.name.select()" /></div>
+    <div><strong>密码</strong><input type="password" ref='pswd' class='logintext' v-model="pswd" placeholder='password'  v-on:input="$refs.pswd.style = inputTextNormalStyle" v-on:mouseenter="$refs.pswd.style = inputTextNormalStyle; $refs.pswd.select()" /></div>
     <div v-if="!logined"><input name="reg" type="submit" value="注册" v-on:click="register"/><input name="login" type="submit" value="登录" v-on:click="login"/></div>
     <div v-else><input name="logout" type="submit" value="退出" v-on:click="logout"/></div>
     <div class='statistics' ref='statistics'>
@@ -205,7 +205,7 @@ export default {
     border: 1px solid;
     border-radius: 2px;
 }
-.login div input[type="text"] {
+.login div input[class="logintext"] {
     display: inline;
     background-color: white;
     color:black;
