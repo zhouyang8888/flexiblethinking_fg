@@ -1,23 +1,23 @@
 <template>
   <div>
-  <div class='problem'>
-    <h5>title</h5><p>{{ pid }}_{{ title }}</p>
-    <h5>desc</h5>
-    <p>{{ desc}}</p>
-    <div v-if="this.imgs"><img v-for="(img, idx) in this.imgs" :key="img + '_' + idx" :src="'http://127.0.0.1:80/api/getImg/' + img" class="descimg" /></div>
-    <div class='container'>
-      <input v-if="!source" name="answerin" ref="answer" type="text" v-model="answer" placeholder="Fill in your answer here." v-on:mouseover="refill" />
-      <textarea v-else name="answerin" ref="source" v-model="answer" placeholder="Fill in your code here." v-on:mouseover="refill" />
-      <div v-if="!show">
-        <button type="submit" v-on:click="submit">提交</button>
-        <form>
-          <input type='radio' name='answtype' v-on:click="setAnswerType(true)" /><p>源码</p>
-          <input type='radio' name='answtype' v-on:click="setAnswerType(false)" /><p>答案</p>
-        </form>
+    <div class='problem'>
+      <h5>title</h5><p>{{ pid }}_{{ title }}</p>
+      <h5>desc</h5>
+      <p>{{ desc}}</p>
+      <div v-if="this.imgs"><img v-for="(img, idx) in this.imgs" :key="img + '_' + idx" :src="'http://127.0.0.1:80/api/getImg/' + img" class="descimg" /></div>
+      <div class='container'>
+        <input v-if="!source" name="answerin" ref="answer" type="text" v-model="answer" placeholder="Fill in your answer here." v-on:mouseover="refill" />
+        <textarea v-else name="answerin" ref="source" v-model="answer" placeholder="Fill in your code here." v-on:mouseover="refill" cols='80' rows='10' />
+        <div v-if="!show">
+          <button type="submit" v-on:click="submit">提交</button>
+          <form>
+            <input type='radio' name='answtype' v-on:click="setAnswerType(true)" /><p>源码</p>
+            <input type='radio' name='answtype' v-on:click="setAnswerType(false)" /><p>答案</p>
+          </form>
+        </div>
+        <img v-else-if="correct" src="../assets/right.png" class="markimg" />
+        <img v-else src="../assets/wrong.jpg" class="markimg" />
       </div>
-      <img v-else-if="correct" src="../assets/right.png" class="markimg" />
-      <img v-else src="../assets/wrong.jpg" class="markimg" />
-    </div>
   </div>
   <button id='return' v-on:click="$emit('showList', Math.floor((pid - 1) / 10 + 1))">返回</button>
   </div>
@@ -72,7 +72,11 @@ export default {
     refill: function () {
       if (this.correct !== true) {
         this.show = false
-        this.$refs.answer.select()
+        if (this.source) {
+          this.$refs.source.select()
+        } else {
+          this.$refs.answer.select()
+        }
       }
     },
     setAnswerType: function (value) {
@@ -167,16 +171,14 @@ export default {
  }
  .container {
    padding-top: 20px;
-   height: 60%;
+   max-height: 60%;
  }
  .container input[type="text"] {
    width: 200px;
-   height: 20px;
+   min-height: 20px;
    float: left;
  }
  .container textarea {
-   width: 60%;
-   height: 60%;
    float: left;
  }
  .container button {
